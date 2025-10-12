@@ -11,7 +11,6 @@ export default function OnboardingPage() {
     height: '',
     weight: '',
     age: '',
-    goal: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,7 +50,6 @@ export default function OnboardingPage() {
           height: parseInt(formData.heightFeet) * 12 + parseInt(formData.heightInches),
           weight: parseFloat(formData.weight),
           age: parseInt(formData.age),
-          goal: formData.goal,
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId);
@@ -59,7 +57,7 @@ export default function OnboardingPage() {
       if (updateError) throw updateError;
 
       // Redirect to dashboard
-      router.push('/dashboard');
+      router.push('/onboardingTwo');
     } catch (error) {
       setError(error.message);
       console.error('Onboarding error:', error);
@@ -115,7 +113,6 @@ export default function OnboardingPage() {
               <input
                 type="number"
                 name="heightFeet"
-                placeholder="5"
                 min="0"
                 max="8"
                 value={formData.heightFeet}
@@ -127,7 +124,6 @@ export default function OnboardingPage() {
               <input
                 type="number"
                 name="heightInches"
-                placeholder="7"
                 min="0"
                 max="11"
                 value={formData.heightInches}
@@ -146,7 +142,6 @@ export default function OnboardingPage() {
               <input
                 type="number"
                 name="weight"
-                placeholder="155"
                 min="50"
                 max="500"
                 step="0.1"
@@ -165,7 +160,6 @@ export default function OnboardingPage() {
               <input
                 type="number"
                 name="age"
-                placeholder="0"
                 min="0"
                 max="100"
                 step="1"
@@ -177,31 +171,11 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          {/* Goal Selection */}
-          <div>
-            <p className="text-2xl text-[#9E9E9E] mb-4">What is your goal?</p>
-            <div className="flex flex-col gap-3">
-              {['Lose weight', 'Maintain weight', 'Increase muscle mass and gain weight'].map((goal) => (
-                <button
-                  key={goal}
-                  type="button"
-                  onClick={() => handleSelectOption('goal', goal)}
-                  className={`px-8 py-3 rounded-full text-lg font-medium transition text-left ${
-                    formData.goal === goal
-                      ? 'bg-[#B3E5FC] text-[#5A5A5A]'
-                      : 'bg-[#E1F5FE] text-[#9E9E9E] hover:bg-[#B3E5FC]'
-                  }`}
-                >
-                  {goal}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || !formData.gender || !formData.heightFeet || !formData.weight || !formData.goal}
+            disabled={loading || !formData.gender || !formData.heightFeet || !formData.weight || !formData.age}
             className="bg-[#9E9E9E] hover:bg-[#757575] text-white text-xl font-semibold px-12 py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : 'Continue'}
