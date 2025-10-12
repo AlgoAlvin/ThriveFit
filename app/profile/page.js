@@ -239,7 +239,7 @@ export default function ProfilePage() {
           <Link href="/dashboard" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
             Home
           </Link>
-          <Link href="/intake" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
+          <Link href="/food" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
             Intake
           </Link>
           <Link href="/profile" className="text-xl text-[#5A5A5A] font-semibold underline">

@@ -146,7 +146,7 @@ export default function DashboardPage() {
           <Link href="/dashboard" className="text-xl text-[#5A5A5A] font-semibold underline">
             Home
           </Link>
-          <Link href="/intake" className="text-xl text-[#595959] font-semibold hover:underline">
+          <Link href="/food" className="text-xl text-[#595959] font-semibold hover:underline">
             Intake
           </Link>
           <Link href="/profile" className="text-xl text-[#595959] font-semibold hover:underline">
