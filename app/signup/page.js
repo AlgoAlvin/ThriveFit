@@ -202,7 +202,7 @@ export default function SignUpPage() {
 
                     <p className="text-center text-[#757575]">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-[#5A5A5A] underline hover:no-underline">
+                        <Link href="login.js" className="text-[#5A5A5A] underline hover:no-underline">
                             Log In
                         </Link>
                     </p>

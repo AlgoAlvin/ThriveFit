@@ -56,7 +56,7 @@ export default function OnboardingPage() {
 
       if (updateError) throw updateError;
 
-      // Redirect to dashboard
+      // Redirect to second onboarding page
       router.push('/onboardingTwo');
     } catch (error) {
       setError(error.message);
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
           </div>
 
 
-          {/* Submit Button */}
+          {/* Continue Button */}
           <button
             type="submit"
             disabled={loading || !formData.gender || !formData.heightFeet || !formData.weight || !formData.age}

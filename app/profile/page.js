@@ -22,6 +22,7 @@ export default function ProfilePage() {
     weight: '',
     age: '',
     goal: '',
+    exercise_freq: '',
   });
 
   const [startingWeight, setStartingWeight] = useState(null);
@@ -74,6 +75,7 @@ export default function ProfilePage() {
         weight: profile?.weight || '',
         age: profile?.age || '',
         goal: profile?.goal || '',
+        exercise_freq: profile?.exercise_freq || '',
       });
 
       setLoading(false);
@@ -116,6 +118,7 @@ export default function ProfilePage() {
           weight: parseFloat(editForm.weight),
           age: parseInt(editForm.age),
           goal: editForm.goal,
+          exercise_freq: editForm.exercise_freq,
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId);
@@ -193,6 +196,9 @@ export default function ProfilePage() {
                   <span className="font-semibold">Goal:</span> {profileData?.goal || '(not set)'}
                 </p>
                 <p>
+                  <span className="font-semibold">Exercise routine:</span> {profileData?.exercise_freq || '(not set)'}
+                </p>
+                <p>
                   <span className="font-semibold">Starting Weight:</span> {startingWeight ? `${startingWeight} lbs` : '(not set)'}
                 </p>
                 <p>
@@ -262,7 +268,7 @@ export default function ProfilePage() {
                   Gender
                 </label>
                 <div className="flex gap-4">
-                  {['Male', 'Female', 'Other'].map((gender) => (
+                  {['Male', 'Female'].map((gender) => (
                     <button
                       key={gender}
                       type="button"
@@ -327,7 +333,7 @@ export default function ProfilePage() {
                   Goal
                 </label>
                 <div className="flex flex-col gap-3">
-                  {['Lose weight', 'Gain weight', 'Increase muscle mass'].map((goal) => (
+                  {['Lose weight', 'Maintain weight', 'Increase muscle mass and gain weight'].map((goal) => (
                     <button
                       key={goal}
                       type="button"
@@ -339,6 +345,29 @@ export default function ProfilePage() {
                       }`}
                     >
                       {goal}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Exercise Frequency */}
+              <div>
+                <label className="block text-lg font-semibold text-[#5A5A5A] mb-2">
+                  Goal
+                </label>
+                <div className="flex flex-col gap-3">
+                  {['Little to none', '1-3 times a week', '4-5 times a week', "Daily"].map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => handleSelectOption('exercise_freq', option)}
+                      className={`px-6 py-3 rounded-full text-lg font-medium transition text-left ${
+                        editForm.exercise_freq === option
+                          ? 'bg-[#B3E5FC] text-[#5A5A5A]'
+                          : 'bg-[#E1F5FE] text-[#9E9E9E] hover:bg-[#B3E5FC]'
+                      }`}
+                    >
+                      {option}
                     </button>
                   ))}
                 </div>

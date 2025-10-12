@@ -68,7 +68,7 @@ export default function DashboardPage() {
         setCalorieData({
           maxCalories: maxCals,
           caloriesTaken: Math.round(caloriesFromMacros),
-          remainingCalories: Math.round(maxCals - caloriesFromMacros),
+          remainingCalories: Math.max(Math.round(maxCals - caloriesFromMacros),0),
         });
 
         // Calculate macro percentages
@@ -105,9 +105,18 @@ export default function DashboardPage() {
     } else {
       bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * profile.age) - 161;
     }
-
-    // Activity multiplier (moderate activity)
-    const tdee = bmr * 1.55;
+    let multiplier;
+    if (profile.exercise_freq === 'Little to none'){
+      multiplier = 1.2;
+    } else if (profile.exercise_freq === '1-3 times a week'){
+      multiplier = 1.375;
+    } else if (profile.exercise_freq === '4-5 times a week'){
+      multiplier = 1.6;
+    } else if (profile.exercise_freq === 'Daily'){
+      multiplier = 1.9;
+    }
+    // Activity multiplier
+    const tdee = bmr * multiplier;
 
     // Adjust based on goal
     if (profile.goal === 'Lose weight') {
@@ -116,11 +125,6 @@ export default function DashboardPage() {
       return Math.round(tdee + 500);
     }
     return Math.round(tdee+150);
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
   };
 
   if (loading) {

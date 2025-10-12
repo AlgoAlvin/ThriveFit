@@ -8,7 +8,7 @@ export default function GoalsAndProgress() {
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
     goal: '',
-    exercise_Freq: ''
+    exercise_freq: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default function GoalsAndProgress() {
         .from('profiles')
         .update({
           goal: formData.goal,
-          exercise_freq: formData.exercise_Freq,
+          exercise_freq: formData.exercise_freq,
           updated_at: new Date().toISOString(),
         })
         .eq('id', userId);
@@ -70,9 +70,9 @@ export default function GoalsAndProgress() {
   }
 
   return (
-    <div className="min-h-screen h-screen flex overflow-hidden">
+    <div className="min-h-screen flex">
       {/* Left Side - Form */}
-      <div className="w-1/2 bg-gray-100 p-12 flex flex-col justify-between overflow-y-auto">
+      <div className="w-1/2 bg-[#F5F5F5] flex flex-col justify-start p-12 overflow-y-auto">
       <form onSubmit={handleSubmit} className="space-y-8">
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -102,16 +102,17 @@ export default function GoalsAndProgress() {
 
           {/* Exercise Frequency */}
           <div>
-            <h2 className="text-gray-400 text-2xl font-medium mb-4">How often will you exercise?</h2>
+            <p className="text-2xl text-[#9E9E9E] mb-4">How often will you exercise?</p>
             <div className="flex flex-col gap-3">
-              {['Little to no exercise', '1-3 times a week', '4-5 times a week', 'Daily'].map((option) => (
+              {['Little to none', '1-3 times a week', '4-5 times a week', 'Daily'].map((option) => (
                 <button
                   key={option}
+                  type="button"
                   onClick={() => handleSelectOption('exercise_freq', option)}
-                  className={`px-6 py-3 rounded-full text-lg font-medium transition-colors text-left ${
+                  className={`px-8 py-3 rounded-full text-lg font-medium transition text-left ${
                     formData.exercise_freq === option
-                      ? 'bg-green-200 text-gray-700 border-2 border-green-300'
-                      : 'bg-blue-100 text-gray-600 hover:bg-blue-200'
+                      ? 'bg-[#B3E5FC] text-[#5A5A5A]'
+                      : 'bg-[#E1F5FE] text-[#9E9E9E] hover:bg-[#B3E5FC]'
                   }`}
                 >
                   {option}
