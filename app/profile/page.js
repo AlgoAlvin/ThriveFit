@@ -26,6 +26,63 @@ export default function ProfilePage() {
   });
 
   const [startingWeight, setStartingWeight] = useState(null);
+  const [exercisePlanName, setExercisePlanName] = useState('');
+  const [workoutSchedule, setWorkoutSchedule] = useState([]);
+
+  // Helper function to get the workout schedule
+  const getWorkoutSchedule = (exerciseFreq) => {
+    const schedules = {
+      'Little to none': [
+        { day: 1, workout: 'Full Body A', isRest: false },
+        { day: 2, workout: 'Rest', isRest: true },
+        { day: 3, workout: 'Rest', isRest: true },
+        { day: 4, workout: 'Full Body B', isRest: false },
+        { day: 5, workout: 'Rest', isRest: true },
+        { day: 6, workout: 'Rest', isRest: true },
+        { day: 7, workout: 'Rest', isRest: true }
+      ],
+      '1-3 times a week': [
+        { day: 1, workout: 'Push', isRest: false },
+        { day: 2, workout: 'Rest', isRest: true },
+        { day: 3, workout: 'Pull', isRest: false },
+        { day: 4, workout: 'Rest', isRest: true },
+        { day: 5, workout: 'Legs', isRest: false },
+        { day: 6, workout: 'Rest', isRest: true },
+        { day: 7, workout: 'Rest', isRest: true }
+      ],
+      '4-5 times a week': [
+        { day: 1, workout: 'Upper', isRest: false },
+        { day: 2, workout: 'Lower', isRest: false },
+        { day: 3, workout: 'Rest', isRest: true },
+        { day: 4, workout: 'Upper', isRest: false },
+        { day: 5, workout: 'Lower', isRest: false },
+        { day: 6, workout: 'Rest', isRest: true },
+        { day: 7, workout: 'Cardio', isRest: false }
+      ],
+      'Daily': [
+        { day: 1, workout: 'Push', isRest: false },
+        { day: 2, workout: 'Pull', isRest: false },
+        { day: 3, workout: 'Legs', isRest: false },
+        { day: 4, workout: 'Chest + Back', isRest: false },
+        { day: 5, workout: 'Arms + Shoulders', isRest: false },
+        { day: 6, workout: 'Legs + Cardio', isRest: false },
+        { day: 7, workout: 'Rest', isRest: true }
+      ]
+    };
+
+    return schedules[exerciseFreq] || schedules['1-3 times a week'];
+  };
+  
+  // Helper function to get the exercise plan name
+  const getExercisePlanName = (exerciseFreq) => {
+    const planNames = {
+      'Little to none': 'Light',
+      '1-3 times a week': 'Moderate',
+      '4-5 times a week': 'High',
+      'Daily': 'Very High'
+    };
+    return planNames[exerciseFreq] || 'Moderate';
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -64,6 +121,10 @@ export default function ProfilePage() {
         setProfileData(profile);
         // Set starting weight as the first recorded weight (you might want a separate field for this)
         setStartingWeight(profile.weight);
+        if (profile) {
+          setExercisePlanName(getExercisePlanName(profile.exercise_freq));
+          setWorkoutSchedule(getWorkoutSchedule(profile.exercise_freq));
+      }
       }
 
       // Set edit form with current data
@@ -140,6 +201,10 @@ export default function ProfilePage() {
 
       setUserData(updatedUser);
       setProfileData(updatedProfile);
+      if (updatedProfile) {
+        setExercisePlanName(getExercisePlanName(updatedProfile.exercise_freq));
+        setWorkoutSchedule(getWorkoutSchedule(updatedProfile.exercise_freq));
+      }
       setIsEditing(false);
       setMessage('Profile updated successfully!');
     } catch (error) {
@@ -178,7 +243,7 @@ export default function ProfilePage() {
             Intake
           </Link>
           <Link href="/profile" className="text-xl text-[#5A5A5A] font-semibold underline">
-            Settings
+            Profile
           </Link>
         </nav>
       </header>
@@ -416,7 +481,27 @@ export default function ProfilePage() {
                 <span>{profileData?.age || 'Not set'}</span>
               </div>
             </div>
+            {/* Exercise Plan Display */}
+          <div className="bg-white rounded-2xl p-8">
+            <h3 className="text-3xl font-bold text-[#5A5A5A] mb-4">
+              Your Exercise Plan: <span className="font-bold text-black">{exercisePlanName}</span>
+            </h3>
+            <div className="space-y-3">
+              {workoutSchedule.map((day) => (
+                <div
+                  key={day.day}
+                  className={`px-6 py-3 rounded-full ${
+                    day.isRest ? 'bg-[#C8E6C9]' : 'bg-[#B3E5FC]'
+                  }`}
+                >
+                  <span className="text-xl font-semibold text-[#5A5A5A]">
+                    Day {day.day}: {day.workout}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
         )}
 
         {/* Sign Out Button */}

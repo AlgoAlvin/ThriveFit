@@ -74,9 +74,9 @@ export default function DashboardPage() {
         // Calculate macro percentages
         const totalGrams = (foodLog.protein_grams || 0) + (foodLog.carbs_grams || 0) + (foodLog.fat_grams || 0);
         setMacroData({
-          protein: totalGrams > 0 ? ((foodLog.protein_grams || 0) / totalGrams * 100) : 0,
-          carbs: totalGrams > 0 ? ((foodLog.carbs_grams || 0) / totalGrams * 100) : 0,
-          fats: totalGrams > 0 ? ((foodLog.fat_grams || 0) / totalGrams * 100) : 0,
+          protein: totalGrams > 0 ? ((foodLog.protein_grams*4 || 0) / (maxCals*0.4) * 100) : 0,
+          carbs: totalGrams > 0 ? ((foodLog.carbs_grams*4 || 0) / (maxCals*0.3) * 100) : 0,
+          fats: totalGrams > 0 ? ((foodLog.fat_grams*9 || 0) / (maxCals*0.3) * 100) : 0,
         });
       } else {
         setCalorieData({
@@ -150,7 +150,7 @@ export default function DashboardPage() {
             Intake
           </Link>
           <Link href="/profile" className="text-xl text-[#595959] font-semibold hover:underline">
-            Settings
+            Profile
           </Link>
         </nav>
       </header>
@@ -179,7 +179,7 @@ export default function DashboardPage() {
 
         {/* Macros Section */}
         <section className="mb-12 px-12 py-8">
-          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Macros</h2>
+          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Macro Goals</h2>
           <div className="bg-[#E8E8E8] rounded-2xl p-8">
             <div className="flex justify-around items-center flex-wrap gap-8">
               {[
@@ -214,7 +214,7 @@ export default function DashboardPage() {
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <p className="text-2xl font-bold text-[#5A5A5A]">{macro.name}</p>
-                      <p className="text-xl text-[#5A5A5A]">Percentage</p>
+                      <p className="text-xl text-[#5A5A5A]">{Math.round(macro.value)}%</p>
                     </div>
                   </div>
                 </div>

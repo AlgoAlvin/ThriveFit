@@ -156,7 +156,7 @@ export default function IntakePage() {
             Intake
           </Link>
           <Link href="/profile" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
-            Settings
+            Profile
           </Link>
         </nav>
       </header>

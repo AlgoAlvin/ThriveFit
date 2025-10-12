@@ -38,7 +38,7 @@ export default function SignUpPage() {
                         username: formData.username,
                     },
                     // This ensures user goes to your app after email confirmation
-                    emailRedirectTo: `${window.location.origin}/onboarding`
+                    emailRedirectTo: `${window.location.origin}/login`
                 }
             });
 
@@ -89,6 +89,7 @@ export default function SignUpPage() {
                 } else {
                     // Email confirmation is required
                     setSuccess(true);
+                    
                 }
             }
         } catch (error) {
@@ -202,7 +203,7 @@ export default function SignUpPage() {
 
                     <p className="text-center text-[#757575]">
                         Already have an account?{' '}
-                        <Link href="login.js" className="text-[#5A5A5A] underline hover:no-underline">
+                        <Link href="" className="text-[#5A5A5A] underline hover:no-underline">
                             Log In
                         </Link>
                     </p>

@@ -33,6 +33,7 @@ export default function GoalsAndProgress() {
   const handleBack = () => {
     router.push('/onboarding');
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -51,8 +52,8 @@ export default function GoalsAndProgress() {
 
       if (updateError) throw updateError;
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to plan page instead of dashboard
+      router.push('/plan');
     } catch (error) {
       setError(error.message);
       console.error('Onboarding error:', error);
@@ -121,21 +122,24 @@ export default function GoalsAndProgress() {
             </div>
           </div>
 
-{/*back/continue buttons*/}
-        <div className="flex justify-center mt-8 gap-6">
-            <button onClick={handleBack}
-            className = "bg-gray-400 hover:bg-gray-500 text-white text-2xl font-medium px-16 py-4 rounded-full transition-colors">
-                Back
+          {/* Back/Continue buttons */}
+          <div className="flex justify-center mt-8 gap-6">
+            <button 
+              type="button"
+              onClick={handleBack}
+              className="bg-gray-400 hover:bg-gray-500 text-white text-2xl font-medium px-16 py-4 rounded-full transition-colors"
+            >
+              Back
             </button>
             <button
-            type="submit"
-            disabled={loading || !formData.goal || !formData.exercise_freq}
-            className="bg-[#9E9E9E] hover:bg-[#757575] text-white text-xl font-semibold px-12 py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Saving...' : 'Continue'}
-          </button>
-        </div>
-      </form>
+              type="submit"
+              disabled={loading || !formData.goal || !formData.exercise_freq}
+              className="bg-[#9E9E9E] hover:bg-[#757575] text-white text-xl font-semibold px-12 py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Saving...' : 'Continue'}
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Right Side - Green */}
