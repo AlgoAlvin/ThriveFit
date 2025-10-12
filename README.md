@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# thrive 🌱
 
-## Getting Started
+**Live Demo**: [thrive-gamma.vercel.app](https://thrive-gamma.vercel.app/)
 
-First, run the development server:
+A free, simple, and beautifully minimalistic web app for tracking daily calories and generating simple exercise plans. Eat smarter, train harder, and reach your goals effortlessly.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The Problem We're Solving
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Many fitness and calorie tracking apps today are bloated with complex features, cluttered UIs, and are often locked behind a paywall. This creates a barrier for people who just want a straightforward tool to monitor their daily intake and stay active.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**thrive** aims to solve this by providing a completely free, intuitive, and easy-to-use platform. We believe that tracking your health should be simple and accessible to everyone, regardless of their technical skill level. Our core focus is on a **minimalistic design** that makes tracking calories and planning your day a breeze.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Key Features ✨
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Daily Calorie Tracking**: Easily log your meals and monitor your daily caloric intake.
+- **USDA Food Database**: Search and add foods from a vast database powered by the USDA API for accurate nutritional information.
+- **Simple Exercise Plans**: Get a basic workout plan to help you stay active and achieve your fitness goals.
+- **Clean & Simple UI**: A user-friendly and uncluttered interface designed for speed and ease of use.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Tech Stack 🛠️
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Frontend**: [Next.js](https://nextjs.org/)
+- **Backend & Database**: [Supabase](https://supabase.io/)
+- **Hosting**: [Vercel](https://vercel.com/)
+- **External API**: [USDA FoodData Central API](https://fdc.nal.usda.gov/api-guide.html)
+- **Language**: [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Project Goals & Future Roadmap 🚀
+
+Our primary goal was to create a calorie tracker that is **easy to use, free for everyone, and beautifully simple**. Looking ahead, we're excited to build upon this foundation with new features that enhance the user experience.
+
+### Future Features:
+
+- **Barcode Scanning**: Implement a feature to scan food barcodes with your device's camera, making macro input faster and more convenient.
+- **In-Depth Workout Routines**: Expand beyond simple plans to offer detailed workout routines tailored to specific user goals (e.g., weight loss, muscle gain).
+- **Personalized Meal Plans**: Provide users with customized meal plans based on their unique caloric needs and fitness objectives.
+
+---
