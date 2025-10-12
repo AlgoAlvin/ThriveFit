@@ -126,7 +126,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <p className="text-2xl text-[#9E9E9E]">Loading your dashboard...</p>
+        <p className="text-2xl text-[#595959]">Loading your dashboard...</p>
       </div>
     );
   }
@@ -134,28 +134,28 @@ export default function DashboardPage() {
   const caloriePercentage = Math.round((calorieData.caloriesTaken / calorieData.maxCalories) * 100);
 
   return (
-    <div className="min-h-screen bg-[#E8E8E8]">
+    <div className="min-h-screen bg-[#EFEFEF]">
       {/* Header */}
-      <header className="bg-[#E8E8E8] px-8 py-6 flex justify-between items-center border-b border-gray-300">
+      <header className="bg-[#EFEFEF] px-8 py-6 flex justify-between items-center border-b border-gray-300">
         <h1 className="text-5xl font-bold text-[#5A5A5A]">thrive</h1>
         <nav className="flex gap-8 items-center">
           <Link href="/dashboard" className="text-xl text-[#5A5A5A] font-semibold underline">
             Home
           </Link>
-          <Link href="/intake" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
+          <Link href="/intake" className="text-xl text-[#595959] font-semibold hover:underline">
             Intake
           </Link>
-          <Link href="/profile" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
+          <Link href="/profile" className="text-xl text-[#595959] font-semibold hover:underline">
             Settings
           </Link>
         </nav>
       </header>
 
-      <main className="p-12">
+      <main className="">
         {/* Calories Remaining Section */}
-        <section className="mb-12">
-          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Calories Remaining</h2>
-          <div className="bg-[#B3E5FC] rounded-full p-4 relative h-24 flex items-center">
+        <section className="mb-0 px-12 py-8 bg-[#CAEBF2] -mx-0">
+          <h2 className="text-4xl font-bold text-[#595959] mb-6 ">Calories Remaining</h2>
+          <div className="bg-[#A9A9A9] rounded-full p-4 relative h-24 flex items-center border-4 border-[#A9A9A9]">
             {/* Progress bar */}
             <div 
               className="absolute left-0 top-0 h-full bg-[#C8E6C9] rounded-full transition-all duration-500"
@@ -174,7 +174,7 @@ export default function DashboardPage() {
         </section>
 
         {/* Macros Section */}
-        <section className="mb-12">
+        <section className="mb-12 px-12 py-8">
           <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Macros</h2>
           <div className="bg-[#E8E8E8] rounded-2xl p-8">
             <div className="flex justify-around items-center flex-wrap gap-8">
@@ -220,9 +220,9 @@ export default function DashboardPage() {
         </section>
 
         {/* Discover Section */}
-        <section>
+        <section className='px-12 py-8 bg-[#CAEBF2] -mx-0'>
           <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Discover</h2>
-          <div className="bg-[#B3E5FC] rounded-2xl p-8">
+          <div className=" rounded-2xl p-8">
             <div className="flex gap-6 flex-wrap">
               <button className="bg-[#E8E8E8] hover:bg-[#D5D5D5] text-[#5A5A5A] text-xl font-semibold px-8 py-4 rounded-full border-2 border-[#9E9E9E] transition">
                 Workout Routines
