@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase.js';
-import Header from '@/components/header.js';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -49,43 +49,40 @@ export default function DashboardPage() {
       // Calculate max calories based on user data (basic calculation)
       const maxCals = calculateMaxCalories(profileData);
       
-      // Fetch today's calorie logs
+      // Fetch today's food log
       const today = new Date().toISOString().split('T')[0];
-      const { data: calorieLog } = await supabase
-        .from('calorie_logs')
+      const { data: foodLog } = await supabase
+        .from('food_log')
         .select('*')
         .eq('user_id', user.id)
         .eq('date', today)
         .single();
 
-      if (calorieLog) {
+      if (foodLog) {
+        // Calculate calories from macros (protein=4cal/g, carbs=4cal/g, fat=9cal/g)
+        const caloriesFromMacros = 
+          (foodLog.protein_grams * 4) + 
+          (foodLog.carbs_grams * 4) + 
+          (foodLog.fat_grams * 9);
+
         setCalorieData({
-          maxCalories: calorieLog.max_calories || maxCals,
-          caloriesTaken: calorieLog.calories_consumed || 0,
-          remainingCalories: (calorieLog.max_calories || maxCals) - (calorieLog.calories_consumed || 0),
+          maxCalories: maxCals,
+          caloriesTaken: Math.round(caloriesFromMacros),
+          remainingCalories: Math.round(maxCals - caloriesFromMacros),
+        });
+
+        // Calculate macro percentages
+        const totalGrams = (foodLog.protein_grams || 0) + (foodLog.carbs_grams || 0) + (foodLog.fat_grams || 0);
+        setMacroData({
+          protein: totalGrams > 0 ? ((foodLog.protein_grams || 0) / totalGrams * 100) : 0,
+          carbs: totalGrams > 0 ? ((foodLog.carbs_grams || 0) / totalGrams * 100) : 0,
+          fats: totalGrams > 0 ? ((foodLog.fat_grams || 0) / totalGrams * 100) : 0,
         });
       } else {
         setCalorieData({
           maxCalories: maxCals,
           caloriesTaken: 0,
           remainingCalories: maxCals,
-        });
-      }
-
-      // Fetch today's macro logs
-      const { data: macroLog } = await supabase
-        .from('macro_logs')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', today)
-        .single();
-
-      if (macroLog) {
-        const totalGrams = (macroLog.protein_grams || 0) + (macroLog.carbs_grams || 0) + (macroLog.fats_grams || 0);
-        setMacroData({
-          protein: totalGrams > 0 ? ((macroLog.protein_grams || 0) / totalGrams * 100) : 0,
-          carbs: totalGrams > 0 ? ((macroLog.carbs_grams || 0) / totalGrams * 100) : 0,
-          fats: totalGrams > 0 ? ((macroLog.fats_grams || 0) / totalGrams * 100) : 0,
         });
       }
 
@@ -97,16 +94,16 @@ export default function DashboardPage() {
 
   // Simple BMR calculation (Mifflin-St Jeor)
   const calculateMaxCalories = (profile) => {
-    if (!profile.weight || !profile.height_feet) return 2000;
+    if (!profile.weight || !profile.height || !profile.age) return 2000;
     
-    const heightInCm = ((profile.height_feet * 12) + (profile.height_inches || 0)) * 2.54;
-    const weightInKg = profile.weight * 0.453592;
+    const heightInCm = profile.height * 2.54; // inches to cm
+    const weightInKg = profile.weight * 0.453592; // lbs to kg
     
     let bmr;
     if (profile.gender === 'Male') {
-      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * 25) + 5; // Assuming age 25
+      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * profile.age) + 5;
     } else {
-      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * 25) - 161;
+      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * profile.age) - 161;
     }
 
     // Activity multiplier (moderate activity)
@@ -114,11 +111,16 @@ export default function DashboardPage() {
 
     // Adjust based on goal
     if (profile.goal === 'Lose weight') {
-      return Math.round(tdee - 500);
-    } else if (profile.goal === 'Gain weight') {
+      return Math.round(tdee - 400);
+    } else if (profile.goal === 'Increase muscle mass and gain weight') {
       return Math.round(tdee + 500);
     }
-    return Math.round(tdee);
+    return Math.round(tdee+150);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
   };
 
   if (loading) {
@@ -129,75 +131,108 @@ export default function DashboardPage() {
     );
   }
 
+  const caloriePercentage = Math.round((calorieData.caloriesTaken / calorieData.maxCalories) * 100);
+
   return (
-    <div className="min-h-screen bg-[#F5F5F5]">
-      <Header userName={profile?.first_name} />
+    <div className="min-h-screen bg-[#E8E8E8]">
+      {/* Header */}
+      <header className="bg-[#E8E8E8] px-8 py-6 flex justify-between items-center border-b border-gray-300">
+        <h1 className="text-5xl font-bold text-[#5A5A5A]">thrive</h1>
+        <nav className="flex gap-8 items-center">
+          <Link href="/dashboard" className="text-xl text-[#5A5A5A] font-semibold underline">
+            Home
+          </Link>
+          <Link href="/intake" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
+            Intake
+          </Link>
+          <Link href="/profile" className="text-xl text-[#5A5A5A] font-semibold hover:underline">
+            Settings
+          </Link>
+        </nav>
+      </header>
 
       <main className="p-12">
         {/* Calories Remaining Section */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-black mb-6">Calories Remaining</h2>
-          <div className="bg-[#B3E5FC] rounded-2xl p-8 flex items-center justify-center gap-8 flex-wrap">
-            <div className="bg-[#E1D5E7] rounded-full px-8 py-6 text-xl text-[#5A5A5A] min-w-[200px] text-center">
-              {calorieData.maxCalories} cal
-              <div className="text-sm text-[#757575] mt-1">Max Calories</div>
-            </div>
-            <span className="text-4xl font-bold">-</span>
-            <div className="bg-[#E1D5E7] rounded-full px-8 py-6 text-xl text-[#5A5A5A] min-w-[200px] text-center">
-              {calorieData.caloriesTaken} cal
-              <div className="text-sm text-[#757575] mt-1">Calories Taken</div>
-            </div>
-            <span className="text-4xl font-bold">=</span>
-            <div className="bg-[#E1D5E7] rounded-full px-8 py-6 text-xl text-[#5A5A5A] min-w-[200px] text-center">
-              {calorieData.remainingCalories} cal
-              <div className="text-sm text-[#757575] mt-1">Remaining</div>
+          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Calories Remaining</h2>
+          <div className="bg-[#B3E5FC] rounded-full p-4 relative h-24 flex items-center">
+            {/* Progress bar */}
+            <div 
+              className="absolute left-0 top-0 h-full bg-[#C8E6C9] rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(caloriePercentage, 100)}%` }}
+            />
+            {/* Text overlay */}
+            <div className="relative z-10 w-full flex items-center justify-between px-8">
+              <span className="text-3xl font-bold text-[#5A5A5A]">
+                {calorieData.remainingCalories}/{calorieData.maxCalories} kcal
+              </span>
+              <span className="text-3xl font-bold text-[#5A5A5A]">
+                {caloriePercentage}%
+              </span>
             </div>
           </div>
         </section>
 
         {/* Macros Section */}
-        <section>
-          <h2 className="text-3xl font-bold text-black mb-6">Macros</h2>
-          <div className="bg-[#F5E6F5] rounded-2xl p-8">
+        <section className="mb-12">
+          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Macros</h2>
+          <div className="bg-[#E8E8E8] rounded-2xl p-8">
             <div className="flex justify-around items-center flex-wrap gap-8">
               {[
-                { name: 'Protein', value: macroData.protein, color: '#C8E6C9' },
-                { name: 'Carbs', value: macroData.carbs, color: '#C8E6C9' },
-                { name: 'Fats', value: macroData.fats, color: '#C8E6C9' }
-              ].map((macro, idx) => (
+                { name: 'Protein', value: macroData.protein, color: '#C8E6C9', bgColor: '#BDBDBD' },
+                { name: 'Carbs', value: macroData.carbs, color: '#C8E6C9', bgColor: '#BDBDBD' },
+                { name: 'Fats', value: macroData.fats, color: '#C8E6C9', bgColor: '#BDBDBD' }
+              ].map((macro) => (
                 <div key={macro.name} className="flex flex-col items-center">
-                  <div className={`w-64 h-64 rounded-full relative ${idx === 2 ? 'ring-4 ring-[#7B1FA2]' : ''}`}>
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
+                  <div className="w-64 h-64 rounded-full relative">
+                    <svg className="w-full h-full transform -rotate-90">
                       {/* Background circle */}
                       <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
+                        cx="128"
+                        cy="128"
+                        r="100"
                         fill="none"
-                        stroke="#BDBDBD"
-                        strokeWidth="20"
+                        stroke={macro.bgColor}
+                        strokeWidth="40"
                       />
                       {/* Progress circle */}
                       <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
+                        cx="128"
+                        cy="128"
+                        r="100"
                         fill="none"
                         stroke={macro.color}
-                        strokeWidth="20"
-                        strokeDasharray={`${2 * Math.PI * 40}`}
-                        strokeDashoffset={`${2 * Math.PI * 40 * (1 - macro.value / 100)}`}
-                        transform="rotate(-90 50 50)"
+                        strokeWidth="40"
+                        strokeDasharray={`${2 * Math.PI * 100}`}
+                        strokeDashoffset={`${2 * Math.PI * 100 * (1 - macro.value / 100)}`}
                         style={{ transition: 'stroke-dashoffset 0.5s ease' }}
                       />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <p className="text-2xl font-bold text-black">{macro.name}</p>
-                      <p className="text-xl text-black">{Math.round(macro.value)}%</p>
+                      <p className="text-2xl font-bold text-[#5A5A5A]">{macro.name}</p>
+                      <p className="text-xl text-[#5A5A5A]">Percentage</p>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Discover Section */}
+        <section>
+          <h2 className="text-4xl font-bold text-[#5A5A5A] mb-6">Discover</h2>
+          <div className="bg-[#B3E5FC] rounded-2xl p-8">
+            <div className="flex gap-6 flex-wrap">
+              <button className="bg-[#E8E8E8] hover:bg-[#D5D5D5] text-[#5A5A5A] text-xl font-semibold px-8 py-4 rounded-full border-2 border-[#9E9E9E] transition">
+                Workout Routines
+              </button>
+              <button className="bg-[#E8E8E8] hover:bg-[#D5D5D5] text-[#5A5A5A] text-xl font-semibold px-8 py-4 rounded-full border-2 border-[#9E9E9E] transition">
+                Meal Plans
+              </button>
+              <button className="bg-[#E8E8E8] hover:bg-[#D5D5D5] text-[#5A5A5A] text-xl font-semibold px-8 py-4 rounded-full border-2 border-[#9E9E9E] transition">
+                More Coming Soon ...
+              </button>
             </div>
           </div>
         </section>

@@ -29,23 +29,62 @@ export default function LoginPage() {
         password: formData.password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        // Handle specific error cases
+        if (signInError.message.includes('Invalid login credentials')) {
+          throw new Error('Invalid email or password. Please try again.');
+        } else if (signInError.message.includes('Email not confirmed') || signInError.message.includes('email_not_confirmed')) {
+          throw new Error('Please check your email and click the verification link before signing in.');
+        } else {
+          throw signInError;
+        }
+      }
 
-      // Check if user has completed onboarding
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('gender, height_feet, weight, goal')
+      // Check if user exists in users table
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('*')
         .eq('id', data.user.id)
         .single();
 
-      if (profileError) throw profileError;
-
-      // If profile data is incomplete, redirect to onboarding
-      if (!profile.gender || !profile.height_feet || !profile.weight || !profile.goal) {
+      // If no user record exists, redirect to onboarding
+      if (userError && userError.code === 'PGRST116') {
+        console.log('No user record found, redirecting to onboarding');
         router.push('/onboarding');
-      } else {
-        router.push('/dashboard');
+        return;
       }
+
+      // Check if user has a profile (measurements)
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      // If no profile exists, redirect to onboarding
+      if (profileError && profileError.code === 'PGRST116') {
+        console.log('No profile found, redirecting to onboarding');
+        router.push('/onboarding');
+        return;
+      }
+
+      // If profile exists but onboarding data is incomplete, redirect to onboarding
+      if (profile) {
+        const hasIncompleteProfile = !profile.gender || 
+                                      !profile.height || 
+                                      !profile.weight || 
+                                      !profile.age;
+        
+        if (hasIncompleteProfile) {
+          console.log('Profile incomplete, redirecting to onboarding');
+          router.push('/onboarding');
+          return;
+        }
+      }
+
+      // If everything is complete, go to dashboard
+      console.log('Profile complete, redirecting to dashboard');
+      router.push('/dashboard');
     } catch (error) {
       setError(error.message);
       console.error('Login error:', error);

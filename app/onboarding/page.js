@@ -8,9 +8,9 @@ export default function OnboardingPage() {
   const [userId, setUserId] = useState(null);
   const [formData, setFormData] = useState({
     gender: '',
-    heightFeet: '',
-    heightInches: '',
+    height: '',
     weight: '',
+    age: '',
     goal: '',
   });
   const [error, setError] = useState('');
@@ -48,9 +48,9 @@ export default function OnboardingPage() {
         .from('profiles')
         .update({
           gender: formData.gender,
-          height_feet: parseInt(formData.heightFeet),
-          height_inches: parseInt(formData.heightInches),
+          height: parseInt(formData.heightFeet) * 12 + parseInt(formData.heightInches),
           weight: parseFloat(formData.weight),
+          age: parseInt(formData.age),
           goal: formData.goal,
           updated_at: new Date().toISOString(),
         })
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
           <div>
             <p className="text-2xl text-[#9E9E9E] mb-4">What is your gender?</p>
             <div className="flex gap-4">
-              {['Male', 'Female', 'Other'].map((gender) => (
+              {['Male', 'Female'].map((gender) => (
                 <button
                   key={gender}
                   type="button"
@@ -158,12 +158,30 @@ export default function OnboardingPage() {
               <span className="text-xl text-[#9E9E9E]">lbs</span>
             </div>
           </div>
+          {/* Age Input */}
+          <div>
+            <p className="text-2xl text-[#9E9E9E] mb-4">What is your age?</p>
+            <div className="flex gap-4 items-center">
+              <input
+                type="number"
+                name="age"
+                placeholder="0"
+                min="0"
+                max="100"
+                step="1"
+                value={formData.age}
+                onChange={handleInputChange}
+                required
+                className="w-32 px-4 py-3 rounded-lg border-2 border-[#9E9E9E] bg-white text-[#5A5A5A] text-lg focus:outline-none focus:border-[#81D4FA]"
+              />
+            </div>
+          </div>
 
           {/* Goal Selection */}
           <div>
             <p className="text-2xl text-[#9E9E9E] mb-4">What is your goal?</p>
             <div className="flex flex-col gap-3">
-              {['Lose weight', 'Gain weight', 'Increase muscle mass'].map((goal) => (
+              {['Lose weight', 'Maintain weight', 'Increase muscle mass and gain weight'].map((goal) => (
                 <button
                   key={goal}
                   type="button"
