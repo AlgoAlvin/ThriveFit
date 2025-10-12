@@ -32,7 +32,7 @@ export default function LoginPage() {
       if (signInError) {
         // Handle specific error cases
         if (signInError.message.includes('Invalid login credentials')) {
-          throw new Error('Invalid email or password. Please try again.');
+          throw new Error('Invalid email or password. Please try again');
         } else if (signInError.message.includes('Email not confirmed') || signInError.message.includes('email_not_confirmed')) {
           throw new Error('Please check your email and click the verification link before signing in.');
         } else {
