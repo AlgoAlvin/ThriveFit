@@ -1,6 +1,6 @@
 # thrive 🌱
 
-**Live Demo**: [thrive-gamma.vercel.app](https://thrive-gamma.vercel.app/)
+**Live Demo**: [thrivefit-gamma.vercel.app](https://thrivefit-gamma.vercel.app/)
 
 A free, simple, and beautifully minimalistic web app for tracking daily calories and generating simple exercise plans. Eat smarter, train harder, and reach your goals effortlessly.
 
